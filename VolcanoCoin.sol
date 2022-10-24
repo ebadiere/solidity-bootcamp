@@ -64,7 +64,7 @@ contract VolcanoCoin {
     function transfer(uint256 amount, address to) public payable {
         require (amount <= balances[msg.sender]);
         balances[msg.sender] = balances[msg.sender] - amount;
-        balances[to] = amount;
+        balances[to] += amount;
         
         userPayments.push(Payment({recipientAddress: to, transferAmount: amount}));
         
@@ -73,7 +73,5 @@ contract VolcanoCoin {
         emit Sent(amount, "sent to", msg.sender);
 
     }
-    
-
     
 }
