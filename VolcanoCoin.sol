@@ -2,10 +2,11 @@
 
 pragma solidity 0.8.0;
 
-contract VolcanoCoin {
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract VolcanoCoin is Ownable{
 
     uint256 totalSupply = 10000;
-    address owner;
 
     event Increase(
         uint256 indexed amount,
@@ -17,14 +18,6 @@ contract VolcanoCoin {
         string message,
         address recipient
     );
-
-    modifier onlyOwner {
-        require(
-            msg.sender == owner,
-            "Only owner can call this function."
-        );
-        _;
-    }
 
     struct UserBalance{
         address user;
@@ -41,9 +34,8 @@ contract VolcanoCoin {
     mapping (address => uint256) balances;
     mapping (address => Payment[]) payments;
 
-    constructor(address _owner){
-        owner = _owner;
-        balances[owner] = totalSupply;
+    constructor(){
+        balances[owner()] = totalSupply;
     }
 
     function getBalance() public view returns (uint256){
@@ -56,7 +48,7 @@ contract VolcanoCoin {
 
     function increaseTotalSupply() public onlyOwner {
         totalSupply = totalSupply + 1000;
-        balances[owner] = totalSupply;
+        balances[owner()] = totalSupply;
         emit Increase(1000, "added to total supply");
     
     }
